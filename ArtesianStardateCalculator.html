@@ -341,7 +341,7 @@
             date.setHours(hours);
             date.setMinutes(minutes);
             date.setSeconds(seconds);
-            return date.toISOString();
+            return date.toISOString().split('T')[0] +" "+ String(hours)+":"+String(minutes)+":"+String(seconds);
         }
 
         function yearConcatDayOfYear(year, dayOfYear, formattedHours, formattedMinutes, formattedSeconds) {
@@ -368,11 +368,10 @@
             const stardateInput = document.getElementById("stardateInput").value.trim();
             const resultElement = document.getElementById("result");
             if (stardateInput) {
-                const parsedDate = parseStardate(stardateInput);
-                const solDate = new Date(parsedDate).toISOString(); // Get the ISO string format
+                const parsedDate = parseStardate(stardateInput); 
                 resultElement.innerHTML = `
-                    <strong>Sol Date:</strong> <span id="stardateDisplay">${solDate}</span>
-                `;
+            <strong>Sol Date:</strong> <span id="stardateDisplay">${parsedDate}</span>
+        `;
                 resultElement.classList.add('success'); // Add success class
                 resultElement.classList.remove('blink'); // Remove blinking class
             } else {
