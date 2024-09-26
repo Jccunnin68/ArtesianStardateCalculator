@@ -261,6 +261,14 @@
                 </td>
             </tr>
             <tr>
+                <td>
+                    <div class="label-container">
+                        <button class="label-button" id="parseStardateButton">Convert To Sol Date</button>
+                        <input type="text" id="stardateInput" placeholder="YYYYDDD.FFMMSS">
+                    </div>
+                </td>
+            </tr>
+            <tr>
                 <td class="right-column" colspan="2"></td>
             </tr>
         </table>
@@ -321,6 +329,21 @@
             };
         }
 
+        function parseStardate(stardate) {
+            const year = parseInt(stardate.slice(0, 4));
+            const dayOfYear = parseInt(stardate.slice(4, 7));
+            const fraction = stardate.slice(8);
+            const hours = Math.floor(parseInt(fraction.slice(0, 2)) * 0.24);
+            const minutes = Math.floor(parseInt(fraction.slice(2, 4)) * 0.6);
+            const seconds = Math.floor(parseInt(fraction.slice(4, 6)) * 0.6);
+            const date = new Date(year, 0);
+            date.setDate(dayOfYear);
+            date.setHours(hours);
+            date.setMinutes(minutes);
+            date.setSeconds(seconds);
+            return date.toISOString();
+        }
+
         function yearConcatDayOfYear(year, dayOfYear, formattedHours, formattedMinutes, formattedSeconds) {
             return `${year}${dayOfYear}.${formattedHours}${formattedMinutes}${formattedSeconds}`;
         }
@@ -341,6 +364,22 @@
         document.querySelectorAll("input").forEach(input => {
             input.addEventListener("input", checkFields);
         });
+        document.getElementById("parseStardateButton").addEventListener("click", function () {
+            const stardateInput = document.getElementById("stardateInput").value.trim();
+            const resultElement = document.getElementById("result");
+            if (stardateInput) {
+                const parsedDate = parseStardate(stardateInput);
+                const solDate = new Date(parsedDate).toISOString(); // Get the ISO string format
+                resultElement.innerHTML = `
+                    <strong>Sol Date:</strong> <span id="stardateDisplay">${solDate}</span>
+                `;
+                resultElement.classList.add('success'); // Add success class
+                resultElement.classList.remove('blink'); // Remove blinking class
+            } else {
+                resultElement.innerText = "Please enter a valid Stardate.";
+            }
+        });
+
 
         document.getElementById("calculateButton").addEventListener("click", function () {
             const month = parseInt(document.getElementById("month").value);
