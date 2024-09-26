@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artesian Stardate Calculator</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #ffcc00;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            margin: 20px;
+            padding: 15px;
+            border: 9px solid #ffcc00;
+            border-radius: 10px;
+            box-shadow: inset 0 0 10px rgba(255, 204, 0, 0.5), 0 0 10px rgba(255, 204, 0, 0.7);
+            position: relative;
+        }
+
+        .inner-border {
+            border: 5px solid #444;
+            border-radius: 8px;
+            padding: 10px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #ffcc00;
+            text-shadow: 0 0 20px #ffcc00;
+        }
+
+        .label-container {
+            display: flex;
+            align-items: flex-start;
+            /* Align the label and input at the top */
+            margin-bottom: 10px;
+        }
+
+        .label-button {
+            background-color: #ffcc00;
+            /* Yellow */
+            color: black;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            /* Match the input field padding */
+            font-size: 16px;
+            margin-right: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 42px;
+            /* Match the input field height */
+        }
+
+        .label-button.alt {
+            background-color: #ffe600;
+            /* Pale yellow */
+        }
+
+        input {
+            padding: 0px;
+            width: calc(100% - 22px);
+            border: 2px solid #ffcc00;
+            border-radius: 5px;
+            color: #ffcc00;
+            font-size: 16px;
+            background-color: #333;
+            display: inline-flex;
+            align-items: center;
+            height: 42px;
+            /* Ensure height matches the button */
+        }
+
+        button {
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            color: #000;
+            cursor: pointer;
+            font-weight: bold;
+            text-shadow: 0 0 5px #ffaa00;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        #resetButton {
+            background-color: #ffcc00;
+        }
+
+        #resetButton:hover {
+            background-color: #ffe600;
+        }
+
+        #helpButton {
+            background-color: #fa8072;
+        }
+
+        #helpButton:hover {
+            background-color: #ffb3b3;
+        }
+
+        .calculate-button {
+            background-color: #ffcc00;
+            height: calc(100%);
+            margin-top: 0px;
+            font-size: 16px;
+        }
+
+        .calculate-button:hover {
+            background-color: #ff8c00;
+        }
+
+        .result {
+            margin-bottom: 0px;
+            background-color: #222;
+            border: 5px solid #4a90e2;
+            border-radius: 10px;
+            padding: 20px;
+            font-size: 20px;
+            color: #ffcc00;
+        }
+
+        .result.blink {
+            animation: blink 1s infinite;
+        }
+
+        .result strong {
+            color: #ffcc00;
+        }
+
+        @keyframes blink {
+            0% {
+                color: #ffcc00;
+            }
+
+            50% {
+                color: #fa8072;
+            }
+
+            100% {
+                color: #ffcc00;
+            }
+        }
+
+        .result.success {
+            color: #98fb98;
+        }
+
+        .button-container {
+            display: flex;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .button-cell {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-end;
+            background-color: #555;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .input-table {
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .input-table td {
+            text-align: left;
+            padding: 5px;
+        }
+
+        .interface-label {
+            font-size: 12px;
+            color: #d2b000;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            text-align: right;
+            z-index: 10;
+        }
+
+        .corner {
+            width: 30px;
+            height: 30px;
+            background-color: #ffcc00;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            clip-path: polygon(0 0, 100% 0, 0 100%);
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Artesian Stardate Calculator</h1>
+
+    <div class="result blink" id="result">
+        <strong>Stardate:</strong> <span id="stardateDisplay">Input Calculation Parameters...</span>
+    </div>
+
+    <div class="inner-border">
+        <table class="input-table">
+            <tr>
+                <td>
+                    <div class="label-container">
+                        <button class="label-button">Month</button>
+                        <input type="number" id="month" min="1" max="12" required>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="label-container">
+                        <button class="label-button alt">Day</button>
+                        <input type="number" id="day" min="1" max="31" required>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="label-container">
+                        <button class="label-button">Year</button>
+                        <input type="number" id="year">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="label-container">
+                        <button class="label-button alt">Hours</button>
+                        <input type="number" id="hours" min="0" max="23" required>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="label-container">
+                        <button class="label-button">Minutes</button>
+                        <input type="number" id="minutes" min="0" max="59" required>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="label-container">
+                        <button class="label-button alt">Seconds</button>
+                        <input type="number" id="seconds" min="0" max="59" required>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="right-column" colspan="2"></td>
+            </tr>
+        </table>
+
+        <div class="button-container">
+            <div class="button-cell">
+                <button id="resetButton" onclick="location.reload();">Reset</button>
+                <button id="helpButton"
+                    onclick="document.getElementById('result').innerText = 'Live long and prosper!';">Help</button>
+            </div>
+            <div class="button-cell">
+                <button id="calculateButton" class="calculate-button" disabled>Calculate</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="corner"></div>
+    <div class="interface-label">PADD Interface</div>
+
+    <script>
+        function createDateAndCalculateDayOfYear(month, day, year, hours = 0, minutes = 0, seconds = 0) {
+            const date = new Date(year, month - 1, day, hours, minutes, seconds);
+            if (date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day) {
+                const startOfYear = new Date(year, 0, 1);
+                const dayOfYear = Math.floor((date - startOfYear) / (1000 * 60 * 60 * 24)) + 1;
+                const DayOfYear = String(dayOfYear).padStart(3, '0');
+                const { formattedHours, formattedMinutes, formattedSeconds } = formatTime(hours, minutes, seconds);
+                return {
+                    formattedDate: date.toISOString(),
+                    DayOfYear: DayOfYear,
+                    formattedHours: formattedHours,
+                    formattedMinutes: formattedMinutes,
+                    formattedSeconds: formattedSeconds
+                };
+            } else {
+                return {
+                    error: "Invalid date or date before 100AD",
+                };
+            }
+        }
+
+        function fractionToPercentage(numerator, denominator) {
+            if (numerator < 0 || numerator >= denominator) {
+                return "Invalid Time Partition";
+            }
+            const percentage = Math.round((numerator / denominator) * 100);
+            return percentage < 10 ? `0${percentage}` : `${percentage}`;
+        }
+
+        function formatTime(hours, minutes, seconds) {
+            const truncatedHours = String(fractionToPercentage(hours, 24));
+            const truncatedMinutes = String(fractionToPercentage(minutes, 60));
+            const truncatedSeconds = String(fractionToPercentage(seconds, 60));
+            return {
+                formattedHours: truncatedHours,
+                formattedMinutes: truncatedMinutes,
+                formattedSeconds: truncatedSeconds
+            };
+        }
+
+        function yearConcatDayOfYear(year, dayOfYear, formattedHours, formattedMinutes, formattedSeconds) {
+            return `${year}${dayOfYear}.${formattedHours}${formattedMinutes}${formattedSeconds}`;
+        }
+
+        function checkFields() {
+            const fields = [
+                document.getElementById("month"),
+                document.getElementById("day"),
+                document.getElementById("year"),
+                document.getElementById("hours"),
+                document.getElementById("minutes"),
+                document.getElementById("seconds")
+            ];
+            const allFilled = fields.every(field => field.value !== '');
+            document.getElementById("calculateButton").disabled = !allFilled;
+        }
+
+        document.querySelectorAll("input").forEach(input => {
+            input.addEventListener("input", checkFields);
+        });
+
+        document.getElementById("calculateButton").addEventListener("click", function () {
+            const month = parseInt(document.getElementById("month").value);
+            const day = parseInt(document.getElementById("day").value);
+            const year = parseInt(document.getElementById("year").value);
+            const hours = parseInt(document.getElementById("hours").value);
+            const minutes = parseInt(document.getElementById("minutes").value);
+            const seconds = parseInt(document.getElementById("seconds").value);
+
+            const result = createDateAndCalculateDayOfYear(month, day, year, hours, minutes, seconds);
+            const resultElement = document.getElementById("result");
+
+            if (result.error) {
+                resultElement.innerText = result.error;
+                document.getElementById("stardateDisplay").innerText = ""; // Clear Stardate display
+                resultElement.classList.remove('success'); // Remove success class
+            } else {
+                const concatenatedResult = yearConcatDayOfYear(year, result.DayOfYear, result.formattedHours, result.formattedMinutes, result.formattedSeconds);
+                resultElement.innerHTML = `
+                    <strong>Stardate:</strong> <span id="stardateDisplay">${concatenatedResult}</span>
+                `;
+                resultElement.classList.add('success'); // Add success class
+                resultElement.classList.remove('blink'); // Remove blinking class
+            }
+        });
+    </script>
+</body>
+
+</html>
